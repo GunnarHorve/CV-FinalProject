@@ -29,3 +29,13 @@
 *.app
 
 # our stuff
+
+uglies/*
+data/*
+neg/*
+info/*
+
+uglies
+data
+neg
+info
