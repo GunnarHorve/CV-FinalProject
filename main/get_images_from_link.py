@@ -61,7 +61,17 @@ def find_uglies():
                     print(str(e))
 
 
+def create_pos_n_neg():
+    if not os.path.isfile('bg.txt'):
+        for img in os.listdir(dir_path):
+            line = 'neg' + '/' + img + '\n'
+            with open('bg.txt', 'a') as f:
+                f.write(line)
+    else:
+        return
+
 store_raw_images()
 find_uglies()
+create_pos_n_neg()
 
 #https://pythonprogramming.net/haar-cascade-object-detection-python-opencv-tutorial/
