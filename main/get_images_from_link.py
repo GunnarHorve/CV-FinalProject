@@ -5,33 +5,31 @@ import cv2
 import numpy as np
 import os
 
-dir_path = './neg'
+negPath = './neg'
 
-
-def store_raw_images():
+def downloadNegatives():
     neg_images_link = 'http://image-net.org/api/text/imagenet.synset.geturls?wnid=n04461879'
     neg_images_request = Request(neg_images_link)
     neg_image_urls = urllib2.urlopen(neg_images_request).read()
     pic_num = 0
 
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-        print("Yaya")
+    if not os.path.exists(negPath):
+        os.makedirs(negPath)
     else:
         return
 
     for i in neg_image_urls.split('\n'):
         try:
             # loop maintenance
-            print(i)
+            print('' + str(pic_num) + '/' + str(len(neg_image_urls.split('\n'))))
             pic_num += 1
 
             # ???
-            neg_image_url = dir_path + '/' + str(pic_num) + ".jpg"
+            picName = negPath + '/' + str(pic_num) + ".jpg"
 
             # downloading and saving image to 100x100 python object
-            urllib.urlretrieve(i, neg_image_url)
-            img = cv2.imread(neg_image_url, cv2.IMREAD_GRAYSCALE)
+            urllib.urlretrieve(i, picName)
+            img = cv2.imread(picName, cv2.IMREAD_GRAYSCALE)
             resized_image = cv2.resize(img, (100, 100))
 
             # saving image to local filesystem
@@ -43,7 +41,7 @@ def store_raw_images():
 
 def find_uglies():
     match = False
-    for file_type in [dir_path]:
+    for file_type in [negPath]:
         for img in os.listdir(file_type):
             for ugly in os.listdir('uglies'):
                 try:
@@ -62,15 +60,15 @@ def find_uglies():
 
 
 def create_pos_n_neg():
-    if not os.path.isfile('bg.txt'):
-        for img in os.listdir(dir_path):
-            line = 'neg' + '/' + img + '\n'
-            with open('bg.txt', 'a') as f:
-                f.write(line)
-    else:
+    if os.path.isfile('bg.txt'):
         return
 
-store_raw_images()
+    for img in os.listdir(negPath):
+        line = negPath + '/' + img + '\n'
+        with open('bg.txt', 'a') as f:
+            f.write(line)
+
+downloadNegatives()
 find_uglies()
 create_pos_n_neg()
 
